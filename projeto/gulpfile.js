@@ -9,7 +9,8 @@ var gulp = require('gulp'),
     browserSync = require('browser-sync'),
     jshint = require('gulp-jshint'),
     jshintStylish = require('jshint-stylish')
-    csslint = require('gulp-csslint');
+    csslint = require('gulp-csslint'),
+    autoprefixer = require('gulp-autoprefixer');
 
 gulp.task('default',['copy'], function(){
 
@@ -60,7 +61,7 @@ gulp.task('usemin', function(){
     gulp.src('dist/**/*.html')
     .pipe(usemin({
         'js': [uglify],
-        'css': [cssmin]
+        'css': [autoprefixer, cssmin]
     }))
     .pipe(gulp.dest('dist'));
 
