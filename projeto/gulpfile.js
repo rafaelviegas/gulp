@@ -10,7 +10,8 @@ var gulp = require('gulp'),
     jshint = require('gulp-jshint'),
     jshintStylish = require('jshint-stylish')
     csslint = require('gulp-csslint'),
-    autoprefixer = require('gulp-autoprefixer');
+    autoprefixer = require('gulp-autoprefixer')
+    less = require('gulp-less');
 
 gulp.task('default',['copy'], function(){
 
@@ -58,6 +59,7 @@ gulp.task('build-html', function(){
 });
 
 gulp.task('usemin', function(){
+
     gulp.src('dist/**/*.html')
     .pipe(usemin({
         'js': [uglify],
@@ -65,8 +67,8 @@ gulp.task('usemin', function(){
     }))
     .pipe(gulp.dest('dist'));
 
-
 });
+
 gulp.task('server', function(){
 
     browserSync.init({
@@ -75,17 +77,28 @@ gulp.task('server', function(){
         }
     });
     
+    gulp.watch('src/less/*.less').on('change', function(event){
+
+        gulp.src(event.path)
+            .pipe(less().on('error', function(error){
+                console.log(error.message)
+            }))
+            .pipe(gulp.dest('src/css'))
+    });
     gulp.watch('src/css/*.css').on('change', function(event){
+
         gulp.src(event.path)
             .pipe(csslint())
             .pipe(csslint.reporter());
     });
 
     gulp.watch('src/js/*.js').on('change', function(event){
+
         gulp.src(event.path)
             .pipe(jshint())
             .pipe(jshint.reporter(jshintStylish));
     });
+
     gulp.watch('src/**/*').on('change', browserSync.reload);
 
 });
